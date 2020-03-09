@@ -6,6 +6,10 @@ double tiempo=0;
 double ultimo=0;
 float factor_conversion=7.11;
 float caudal=0;
+int tiempoPrSeg = 0;
+int tiempoPrMin = 0;
+int tiempoFnMin = 0;
+int tiempoFnSeg = 0;
 // Timer: Auxiliary variables
 unsigned long now = millis();
 unsigned long lastTrigger = 0;
@@ -28,7 +32,6 @@ void setup() {
   // Set motionSensor pin as interrupt, assign interrupt function and set RISING mode
   attachInterrupt(digitalPinToInterrupt(motionSensor), detectsMovement, RISING);
 }
-
 void loop() {
   // Current time
   now = millis();
@@ -39,13 +42,30 @@ void loop() {
     pulsos=0;
     caudal = guardar/factor_conversion;
     volumen=volumen+caudal/60;
-    Serial.print("Caudal: ");
-    Serial.print(caudal);
-    Serial.println(" L/m");
-    Serial.print("Volumen: ");
-    Serial.print(volumen);
-    Serial.println(" L");
-    Serial.print(tiempo);
-    Serial.println("S");
+
+    if(caudal != 0){
+      tiempoD();
+      Serial.print("Caudal: ");
+      Serial.print(caudal);
+      Serial.println(" L/m");
+      Serial.print("Volumen: ");
+      Serial.print(volumen);
+      Serial.println(" L");
+      /*Serial.printf(tiempoPrMin);
+      Serial.print(":");
+      Serial.printf(tiempoPrSeg);
+      Serial.println(" Min");*/
+      char tpM[10];
+      sprintf(tpM,"%02d%c%02d%s", tiempoPrMin,':',tiempoPrSeg," Min");
+      Serial.println(tpM);
+    }
+   }
   }
-}
+  void tiempoD(){
+    tiempoPrSeg++;
+    if(tiempoPrSeg == 60){
+       tiempoPrSeg = 0;
+       tiempoPrMin++;
+    }
+    delay(1000);
+  }
