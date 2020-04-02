@@ -1,4 +1,25 @@
+
 #define timeSeconds 1
+//LCD 16*2 I2C Display libraries
+#include <Wire.h>               
+#include <LiquidCrystal_I2C.h>    
+LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+//LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
+#include "ThingSpeak.h" // Incluye la librería ThingSpeak
+#include <ESP8266WiFi.h> // Incluye la librería ESP8266wifi
+
+//Varibles de conexion al servidor
+// ----- Cambiar XXXXX por el nombre de la red wifi o datos a la que se va a conectar
+char ssid[] = "XXXXX"; // Nombre del WiFi (nombre del router)
+// ----- Cambiar YYYYY por la contraseña de la red wifi o datos a la que se va a conectar 
+char pass[] = "YYYYY"; // WiFi router password
+// ----- Cambiar 123456 por el ID de su canal en ThingSpeak
+unsigned long myChannelNumber = 123456; // Thingspeak número de canal
+// ----- Cambiar ZZZZZZZZZZ por la API Key de su canal en ThingSpeak
+const char * myWriteAPIKey = "ZZZZZZZZZZ"; // ThingSpeak write API Key
+
+int status = WL_IDLE_STATUS; 
+WiFiClient client;
 
 // Set GPIOs for LED and PIR Motion Sensor
 const int motionSensor = 14;
@@ -17,23 +38,63 @@ boolean startTimer = false;
 int pulsos=0;
 int guardar=0;
 float volumen=0;
+//pines buzzer y sensor ir
+int pinbuzer = 16;
+int pinInfr = 2;
 // Checks if motion was detected, sets LED HIGH and starts a timer
+int  estado;
 ICACHE_RAM_ATTR void detectsMovement() {
   pulsos=pulsos+1;
   tiempo = tiempo + 0.001;
 }
 
 void setup() {
+    WiFi.begin(ssid, pass); // Inicia la conexion WiFi 
+    ThingSpeak.begin(client); // Inicia ThingSpeak
   // Serial port for debugging purposes
   Serial.begin(115200);
-  
+  pinMode(pinbuzer,OUTPUT);
+  pinMode(pinInfr,INPUT);
+  lcd.begin(16,2);// Cols and rows of the I2C Dsp
+  //lcd.init();
   // PIR Motion Sensor mode INPUT_PULLUP
   pinMode(motionSensor, INPUT_PULLUP);
   // Set motionSensor pin as interrupt, assign interrupt function and set RISING mode
   attachInterrupt(digitalPinToInterrupt(motionSensor), detectsMovement, RISING);
+
+  //Conexion al servidor
+   Serial.println();
+   Serial.print("Conectando a ");
+   Serial.print(ssid);
+
+   while (WiFi.status() != WL_CONNECTED)
+   {
+     delay(500);
+     Serial.print(".");
+   }
+
+   Serial.println();
+   Serial.println("Conectado a WiFi");
+   Serial.print("Dirección IP: ");
+   Serial.println(WiFi.localIP());
 }
-void loop() {
-  // Current time
+  void loop() {
+     estado = digitalRead(pinInfr);
+    Serial.println(estado);
+  if(estado == 1){
+    delay(1500);
+    do{
+      delay(150);
+       proceso();
+       estado = digitalRead(pinInfr);
+       Serial.println(estado);
+      }while(estado == 0);
+      enviar();
+      reinicio();
+     }
+  }
+  void proceso(){
+      // Current time
   now = millis();
   // Turn off the LED after the number of seconds defined in the timeSeconds variable
   if(now - lastTrigger > (timeSeconds*1000)) {
@@ -45,19 +106,28 @@ void loop() {
 
     if(caudal != 0){
       tiempoD();
-      Serial.print("Caudal: ");
+     /* Serial.print("Caudal: ");
       Serial.print(caudal);
       Serial.println(" L/m");
       Serial.print("Volumen: ");
       Serial.print(volumen);
-      Serial.println(" L");
-      /*Serial.printf(tiempoPrMin);
-      Serial.print(":");
-      Serial.printf(tiempoPrSeg);
-      Serial.println(" Min");*/
+      Serial.println(" L");*/
       char tpM[10];
       sprintf(tpM,"%02d%c%02d%s", tiempoPrMin,':',tiempoPrSeg," Min");
       Serial.println(tpM);
+      //Use the display to print vol & time
+      lcd.setCursor(0,0); // Inicio del cursor
+      lcd.print("L. GASTO : ");
+      lcd.print(volumen);
+      lcd.setCursor(0,1); 
+      lcd.print("TIEMPO : ");
+      lcd.print(tpM);
+      if(volumen > 10){
+        digitalWrite(pinbuzer,HIGH);
+      }
+      else{
+        digitalWrite(pinbuzer,LOW);
+      }
     }
    }
   }
@@ -69,3 +139,125 @@ void loop() {
     }
     delay(1000);
   }
+ /* int sensorIr(){
+    int  estado = digitalRead(pinInfr);
+     return estado;
+  }*/
+  void reinicio(){
+    tiempoPrSeg = 0;
+    tiempoPrMin = 0;
+    lcd.clear();
+  }
+  void enviar(){
+    Serial.print("Ultimo dato enviado =");
+      char tpM[10];
+      sprintf(tpM,"%02d%c%02d%s\n%s%i", tiempoPrMin,':',tiempoPrSeg," Min");
+      Serial.println(tpM); 
+      delay(2000);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
