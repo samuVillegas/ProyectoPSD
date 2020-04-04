@@ -12,19 +12,24 @@
       <script src="js/jquery.min.js"></script>
       <script src="js/popper.min.js"></script>
       <script src="js/bootstrap.min.js"></script>
+
+      <!--Links para el funcionamiento de font awesome icons-->
+      <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/solid.css">
+      <script src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
+
   </head>
+
   <body>
     <span class="spinner-grow text-danger"></span>
-    <header id="header" class="header">
-      <img src="" class="">
-    </header>
+   <!---- <header id="header" class="header">
+    </header>-->
 
     <!--navbar-->
     <nav class="navbar sticky-top navbar-expand-lg navbar-light" id="mainNav">
         <div class="container">
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
               <ul class="nav navbar-nav navbar-right">
-                <a>SCD</a>
+                <a class="display-4"><i class="fas fa-shower"></i></a>
               </ul>
           </div>
             <button class="navbar-toggler navbar-toggler-right" type="button" 
@@ -34,29 +39,87 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
               <ul class="navbar-nav ml-auto">
-                 <!---- <li class="nav-item">
+                 <!--<li class="nav-item">
                     <a class="nav-link" href="">Tablas</a>
                   </li>
                   <li class="nav-item">
                     <a  class="nav-link" href="">Graficas</a>
                   </li>-->
                   <li class="nav-item">
-                    <a  class="nav-link" href="">Loguearse</a>
-                  </li>-->
+                    <a  class="nav-link" href="">Log In</a>
+                  </li>
              </ul>
          </div>
         </div>
     </nav>
    <!--Finaliza el navbar-->
-
+    
      <p class="titulo alert">Bienvenido al sistema de control para la ducha</p>
-     <div class=" shadow-lg p-3 mb-5 bg-white rounded">
-       <p class="texto"><span>Aquí podras :</span><br><br> - Obtener datos tomados de tu ducha, 
-          además de poder visualizarlos. <br><<br><br>
-         - Visualizar tus datos mediante graficas<br><br>-
-          - Visualizar tus datos mediante  tablas<br><br><br> 
-          <a href="" class="btn btn-success">Descargar manual de usuari</a> 
-       </p>
+     <div class="container container-fluid shadow-lg p-3 mb-5 bg-white rounded presentacion">
+        <div class="row">
+
+          <div class="col-sm-7">
+             <h1 class="text-primary">Aquí podras :</h1>
+             <p class="text-info informacion">
+               <br>
+               <span class ="text-success">
+                 <i class="fas fa-check"></i>
+               </span>
+               <span class="textoinfo">
+                 Obtener datos tomados de tu ducha, 
+               </span>
+               <span style="padding-left:16%;">además de poder visualizarlos.</span>
+               <br><br>
+               <span class ="text-success">
+                 <i class="fas fa-check"></i>
+               </span>
+               <span class="textoinfo">
+                 Visualizar tus datos mediante graficas.
+               </span> 
+               <br><br>
+               <span class ="text-success">
+                 <i class="fas fa-check"></i>
+                </span>
+                <span class="textoinfo">
+                   Visualizar tus datos mediante  tablas.
+                </span> 
+               <br><br><br> 
+             </p>
+          </div> 
+          <div class="col-sm-1"></div>
+          <div class="col-sm-3"> <img src="img/logo.png" class="logo"></div>
+        </div>
     </div>
+
+    <div class="container container-fluid">
+      <div class="row">
+        <div class="col-sm-5"></div>
+             <a href="" id="manual" class="btn btn-primary" onmouseover="overmouse()" 
+             onmouseout="outmouse()">
+               Descargar manual de usuario
+            </a>
+        <div class="col-sm-5"></div>
+      </div>
+    </div>
+    <br><br>
+    <footer>
+      <div class="container container-fluid footer">
+        <div class="row">
+            <div class="col-sm-3"><span class="">Julian Andres Ramirez Jimenez</span></div>
+            <div class="col-sm-3"><span class="">Samuel David Villegas Bedoya</span></div>
+            <div class="col-sm-3"><span class="">Edier Morales Barrera</span></div>
+            <div class="col-sm-3"><span class="">Kevin Sossa Chavarria</span></div>
+        </div>
+        <br><br>
+        <div class="row">
+           <div class="col-sm-4"></div>
+           <div class="col-sm-4"><p class="text-light">Sistema Control Ducha</p></div>
+           <div class="col-sm-4"></div>
+        </div>
+      </div>
+      <br>
+    </footer>
+    <!--Conexion con las animaciones en js-->
+    <script src="js/animaciones.js"></script>
   </body>
 </html>
