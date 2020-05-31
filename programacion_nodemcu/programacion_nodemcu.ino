@@ -8,7 +8,7 @@
 LiquidCrystal_I2C lcd(0x27, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 //LiquidCrystal_I2C lcd(0x3F, 2, 1, 0, 4, 5, 6, 7, 3, POSITIVE);
 
-//Varibles de conexion al servidor
+//Variables de conexion al servidor
 // ----- Cambiar XXXXX por el nombre de la red wifi o datos a la que se va a conectar
 char ssid[] = "UNE_HFC_7BB0"; // Nombre del WiFi (nombre del router)
 // ----- Cambiar YYYYY por la contraseña de la red wifi o datos a la que se va a conectar 
@@ -30,9 +30,7 @@ float caudal=0;
 int tiempoPrSeg = 0;
 int tiempoPrMin = 0;
 int tiempoPrH = 0;
-int tiempoFnMin = 0;
 int tiempoFnSeg = 0;
-int tiempoFnH = 0;
 // Timer: Auxiliary variables
 unsigned long now = millis();
 unsigned long lastTrigger = 0;
@@ -84,7 +82,7 @@ void setup() {
    if(estado == 1){
      delay(1500);
      do{
-      delay(150);
+       delay(150);
        proceso();
        estado = digitalRead(pinInfr);
        Serial.println(estado);
@@ -127,6 +125,7 @@ void setup() {
   }
   void tiempoD(){
     tiempoPrSeg++;
+    tiempoFnSeg++;
     if(tiempoPrSeg == 60){
        tiempoPrSeg = 0;
        tiempoPrMin++;
@@ -141,18 +140,20 @@ void setup() {
     tiempoPrSeg = 0;
     tiempoPrMin = 0;
     tiempoPrH = 0;
+    tiempoFnSeg = 0;
     lcd.clear();
   }
   void enviar(){
     Serial.print("Ultimo dato enviado =");
-      char tpM[10];
-      sprintf(tpM,"%02d%c%02d%c%02d",tiempoPrH,':', tiempoPrMin,':',tiempoPrSeg);
+     /* char tpM[10];
+      sprintf(tpM,"%02d%c%02d%c%02d",tiempoPrH,':', tiempoPrMin,':',tiempoPrSeg);*/
         ThingSpeak.setField(1,volumen);
-        ThingSpeak.setField(2,tpM );
+        ThingSpeak.setField(2,tiempoFnSeg);
        // Escribe todos los campos a la vez.
       ThingSpeak.writeFields(myChannelNumber, myWriteAPIKey);
-      Serial.println(tpM);
+      Serial.println(tiempoFnSeg);
       Serial.println(volumen); 
+      digitalWrite(pinbuzer,LOW);
       delay(2000);
   }
 
